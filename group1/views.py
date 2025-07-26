@@ -8,6 +8,8 @@ from django.contrib import messages
 import random
 import string
 from .ai import generate_feedback_from_api
+from django.shortcuts import render, get_object_or_404
+from .models import Quiz, QuizQuestion
 
 
 # Create your views here.
@@ -83,7 +85,12 @@ def grammar_quiz_question(request):
     current_quiz_question = quiz_questions[current_index]
     question = current_quiz_question.question
     choices = Choice.objects.filter(question=question).order_by('id')
-    
+
+    if request.method == 'POST' and 'toggle_bookmark' in request.POST:
+        current_quiz_question.bookmarked = not current_quiz_question.bookmarked
+        current_quiz_question.save()
+        return redirect('group1:grammar_quiz_question')  # Refresh page to update state
+
     # Calculate progress
     quiz_progress = int(((current_index + 1) / total_questions) * 100)
     
@@ -869,3 +876,22 @@ def retry_mistakes(request, quiz_id):
     request.session['current_grammar_quiz_id'] = new_quiz.id
 
     return redirect('group1:grammar_quiz_question')  # or dynamic based on quiz type
+
+
+def toggle_bookmark(request, quiz_question_id):
+    if request.method == 'POST':
+        quiz_question = get_object_or_404(QuizQuestion, id=quiz_question_id)
+        quiz_question.bookmarked = not quiz_question.bookmarked
+        quiz_question.save()
+        return JsonResponse({'bookmarked': quiz_question.bookmarked})
+
+
+def bookmarked_questions(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    bookmarked = QuizQuestion.objects.filter(quiz=quiz, bookmarked=True).select_related('question')
+
+    context = {
+        'quiz': quiz,
+        'bookmarked_questions': bookmarked,
+    }
+    return render(request, 'bookmarked_questions.html', context)

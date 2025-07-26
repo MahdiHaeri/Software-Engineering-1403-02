@@ -1,0 +1,37 @@
+<!-- bookmarked_questions.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bookmarked Questions - {{ quiz.title }}</title>
+    <style>
+        body { background-color: #111; color: #eee; font-family: Inter, sans-serif; padding: 2rem; }
+        .question-box { background: #222; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; }
+        .question-text { font-weight: bold; margin-bottom: 0.5rem; }
+        .answer-info { font-size: 0.9rem; color: #ccc; }
+    </style>
+</head>
+<body>
+    <h1>🔖 Bookmarked Questions</h1>
+    {% for q in bookmarked_questions %}
+        <div class="question-box">
+            <div class="question-text">{{ forloop.counter }}. {{ q.question.text_or_prompt }}</div>
+            <div class="answer-info">
+                {% if q.user_answer %}
+                    <strong>Your answer:</strong>
+                    {% for choice in q.question.choices.all %}
+                        {% if choice.id|stringformat:"s" == q.user_answer|stringformat:"s" %}
+                            {{ choice.text }}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <em>No answer submitted</em>
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <p>No bookmarked questions yet.</p>
+    {% endfor %}
+    <a href="{% url 'group1:group1' %}">⬅️ Back to Dashboard</a>
+</body>
+</html>

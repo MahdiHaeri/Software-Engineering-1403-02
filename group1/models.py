@@ -58,6 +58,7 @@ class QuizQuestion(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     user_answer = models.TextField(null=True, blank=True)
     is_correct = models.BooleanField(default=False)
-
+    bookmarked = models.BooleanField(default=False)  # ✅ Add this line
+    
     def __str__(self):
         return f"QuizQuestion {self.id} (Quiz {self.quiz.id}, Question {self.question.id})"

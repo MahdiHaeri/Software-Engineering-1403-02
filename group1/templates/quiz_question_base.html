@@ -70,6 +70,19 @@
     {% csrf_token %}
     <input type="hidden" name="user_answer" id="user-answer-input">
 
+    <!-- Bookmark Button -->
+    <div style="margin-bottom: 1rem;">
+        <button type="submit" name="toggle_bookmark"
+                class="submit-btn"
+                style="background-color: {% if current_quiz_question.bookmarked %}#4CAF50{% else %}#333{% endif %}; margin-right: 1rem;">
+            {% if current_quiz_question.bookmarked %}
+                🔖 Bookmarked
+            {% else %}
+                📌 Bookmark this question
+            {% endif %}
+        </button>
+    </div>
+
     {% block question_content %}{% endblock %}
 
     <!-- Action Buttons -->
@@ -81,6 +94,7 @@
         {% endif %}
     </div>
 </form>
+
 
 {{ js_data|json_script:"js-data" }}
 <script>

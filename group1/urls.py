@@ -22,4 +22,7 @@ urlpatterns = [
   path('reset-quiz/<int:quiz_id>/', views.reset_quiz, name='reset_quiz'),
   path('quiz/<int:quiz_id>/review/', views.review_mistakes, name='review_mistakes'),
   path('quiz/<int:quiz_id>/retry/', views.retry_mistakes, name='retry_mistakes'),
+  path('toggle_bookmark/<int:quiz_question_id>/', views.toggle_bookmark, name='toggle_bookmark'),
+  path('quiz/<int:quiz_id>/bookmarked/', views.bookmarked_questions, name='bookmarked_questions'),
+
 ]
